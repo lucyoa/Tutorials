@@ -92,7 +92,8 @@ contract Borda is IBorda {
         voteTo(second, 2);
         voteTo(third, 1);
 
-        _voters[msg.sender].registered = false;
+        //@note should not be set to false
+        //_voters[msg.sender].registered = false;
         return true;
     }
 

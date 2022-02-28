@@ -54,7 +54,7 @@ rule checkStartedToStateTransition(method f, uint256 meetingId) {
 	uint8 stateBefore = getStateById(e, meetingId);
 	f(e, args);
 	
-	assert (stateBefore == 2 => (getStateById(e, meetingId) == 2 || getStateById(e, meetingId) == 4)), "the status of the meeting changed from STARTED to an invalid state";
+	assert (stateBefore == 2 => (getStateById(e, meetingId) == 2 || getStateById(e, meetingId) == 3)), "the status of the meeting changed from STARTED to an invalid state";
 	assert ((stateBefore == 2 && getStateById(e, meetingId) == 4) => f.selector == endMeeting(uint256).selector), "the status of the meeting changed from STARTED to ENDED through a function other then endMeeting()";
 }
 
@@ -79,6 +79,8 @@ rule monotonousIncreasingNumOfParticipants(method f, uint256 meetingId) {
 	env e;
 	calldataarg args;
 	uint256 numOfParticipantsBefore = getNumOfParticipents(e, meetingId);
+    uint8 stateBefore = getStateById(e, meetingId);
+    require stateBefore == 0 => numOfParticipantsBefore == 0;
 	f(e, args);
     uint256 numOfParticipantsAfter = getNumOfParticipents(e, meetingId);
 

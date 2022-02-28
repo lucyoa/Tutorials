@@ -65,6 +65,13 @@ rule totalSupplyNotLessThanSingleUserBalance(method f, address user) {
 	calldataarg args;
 	uint256 totalSupplyBefore = totalSupply(e);
     uint256 userBalanceBefore = balanceOf(e, user);
+    uint256 senderBalance = balanceOf(e, e.msg.sender);
+
+    // require totalSupplyBefore >= userBalanceBefore;
+    require f.selector == burn(address,uint256).selector => totalSupplyBefore >= userBalanceBefore + senderBalance;
+    require f.selector == transfer(address,uint256).selector => totalSupplyBefore >= userBalanceBefore + senderBalance;
+    // require f.selector == transferFrom(address,address,uint256).selector => 
+
     f(e, args);
     uint256 totalSupplyAfter = totalSupply(e);
     uint256 userBalanceAfter = balanceOf(e, user);

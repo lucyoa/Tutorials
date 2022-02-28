@@ -210,10 +210,18 @@ contract ERC20 is IERC20, IERC20Metadata {
         virtual
         returns (bool)
     {
+        //@note should be plus instead of minus
+        /*
         _approve(
             msg.sender,
             spender,
             _allowances[msg.sender][spender] - addedValue
+        );
+        */
+        _approve(
+            msg.sender,
+            spender,
+            _allowances[msg.sender][spender] + addedValue
         );
         return true;
     }
