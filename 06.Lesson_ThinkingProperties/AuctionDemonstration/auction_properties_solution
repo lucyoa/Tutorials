@@ -1,0 +1,58 @@
+# Valid States
+- Not Created
+- Created, bid not expired, not ended
+- Created, bid expired, not ended
+- Created, bit expired, ended
+
+
+# State Transitions
+- Not Created => Created, bit not expired, not ended
+- Created, bit not expired, not ended => 
+	- Created, bit expired, not ended
+	- Created, bit not expired, ended
+	- Created, bit expired, ended
+
+# Variable Transitions
+- auction[id].payment - cannot change
+- auction[id].prize - can only decrease
+- auction[id].bid_expiry - can only increase
+- auction[id].end_time - cannot change
+
+# High-Level Properties
+- balanceOf(user) has to be smaller or equal to totalSupply 
+
+# Unit Tests
+- mint(who, amount) =>
+	- balanceOf(who) increased by amount
+	- totalSupply increased by amount
+- transferTo(to, value) =>
+	- if balanceOf(msg.sender) >= value and value > 0 => returned true =>
+		- balanceOf(to) increased by value
+		- balanceOf(msg.sender) decreased by value
+		- totalSupply has not changed	
+	- if balanceOf(msg.sender) < value or value == 0 => returned false =>
+		- balanceOf(to) has not changed
+		- balanceOf(msg.sender) has not changed
+		- totalSupply has not changed	
+- balanceOf(user) => returns balance of user
+- getTotalSupply => returns totalSupply
+
+- getAuction(id) =>
+	- returns prize, payment, winner, bid_expiry, end_time of an auction 
+- newAuction(id, payment) =>
+	- created new auction auctions[id]:
+		- prize: MAX_UINT256
+		- payment
+		- winner: msg.sender (owner)
+		- bid_expiry: 0
+		- end_time: now + 1 days
+- bid(id, b) =>
+	- if b < auctions[id].prize =>
+		- auctions[id].prize = b
+		- auctions[id].winner = msg.sender
+		- auctions[id].bid_expiry = now + 1 days
+- close(id) =>
+	- if auction[id].bid_expiry != 0 and (auction[id].bid_expiry < now || auctions[id].end_time < now)) =>
+		- mint for auctions[id].winner tokens auctions[id].prize
+		- delete auctions[id]
+

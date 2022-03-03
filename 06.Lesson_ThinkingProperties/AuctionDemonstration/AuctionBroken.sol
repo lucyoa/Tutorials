@@ -102,6 +102,11 @@ contract AuctionImpl is TokenInterface {
 		require(auctions[id].bid_expiry != 0
 				&& (auctions[id].bid_expiry < now || 
 					auctions[id].end_time < now));
+
+        // solution
+        uint256 supply = getTotalSupply().safeAdd(auctions[id].prize);
+        require(supply < uint256(-1));
+
 		mint(auctions[id].winner, auctions[id].prize);
 		delete auctions[id];
 	}

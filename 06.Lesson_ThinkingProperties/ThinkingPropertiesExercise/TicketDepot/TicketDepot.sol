@@ -88,4 +88,18 @@ contract TicketDepot {
 			delete offerings[offerID];  
 	} 
 
+    // adding helpers
+    function getOffering(bytes32 offeringId) external view returns (address, uint64, uint256) {
+        Offering storage offer = offerings[offeringId];
+		return (offer.buyer, offer.price, offer.deadline);
+    }
+    function getEvent(uint16 eventId) external view returns (address, uint64, uint16) {
+		Event storage ev = eventsMap[eventId];
+        return (ev.owner, ev.ticketPrice, ev.ticketsRemaining);
+    }
+
+    function getNumEvents() external view returns (uint16) {
+        return numEvents;
+    }
+
 } 

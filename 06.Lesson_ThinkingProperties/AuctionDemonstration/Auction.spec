@@ -18,6 +18,9 @@
 methods {
     getTotalSupply() returns uint256 envfree
     balanceOf(address) returns uint256 envfree
+    newAuction(uint, uint)
+    owner() returns address envfree
+    getAuction(uint) returns (uint,uint,address,uint,uint) envfree
 }
 
 /**************** Generic rules ***********************/
@@ -75,6 +78,26 @@ rule transferWithIllegalValue(address to)
         "permits a transfer of zero tokens";
 }
 
+rule winnerOwner(method f, uint id, uint payment_init)
+{
+    env ef;
+    address owner = invoke owner();
+
+    invoke newAuction(ef, id, payment_init);
+
+    uint price; uint payment; address winner;uint bid_expiry; uint end_time;
+    price, payment, winner, bid_expiry, end_time = sinvoke getAuction(id);
+
+    require winner == owner;
+
+    calldataarg arg;
+    invoke f(ef, arg);
+
+    uint priceAfter; uint paymentAfter; address winnerAfter;uint bid_expiryAfter; uint end_timeAfter;
+    priceAfter, paymentAfter, winnerAfter, bid_expiryAfter, end_timeAfter = sinvoke getAuction(id);
+
+    assert(bid_expiry == 0 => winner == owner, "winner is not an owner");
+}
 
 
 
