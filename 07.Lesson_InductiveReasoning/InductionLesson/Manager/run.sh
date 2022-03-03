@@ -1,3 +1,3 @@
 certoraRun Manager.sol:Manager --verify Manager:Manager.spec \
---solc solc8.6 \
+--solc solc \
 --msg "$1"

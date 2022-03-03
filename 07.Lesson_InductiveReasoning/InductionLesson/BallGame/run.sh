@@ -1,3 +1,3 @@
 certoraRun BallGame.sol:BallGame --verify BallGame:BallGameSolution.spec \
---solc solc8.6 \
+--solc solc \
 --msg "$1"
