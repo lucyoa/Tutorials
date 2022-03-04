@@ -49,6 +49,7 @@ rule whoChangedMyGhost(method f) {
 	f(e,args);
 	mathint after = sumAllFunds();
 	assert(before == after);
+    assert false;
 }
 
 
