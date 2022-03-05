@@ -96,11 +96,21 @@ contract MeetingScheduler is IMeetingScheduler {
         require(msg.sender == scheduledMeeting.organizer,
                 "only the organizer of a meeting can cancel it"
         );
+        //@note should be only if PENDING
+        /*
         require(
             scheduledMeeting.status == MeetingStatus.STARTED,
             "can't end a meeting if not started"
         );
-        meetings[meetingId].status = MeetingStatus.ENDED;
+        */
+        require(
+            scheduledMeeting.status == MeetingStatus.PENDING,
+            "meetings can be cancelled only if it's currently pending"
+        );
+
+        //@note should be changed to CANCELLED not ENDED 
+        //meetings[meetingId].status = MeetingStatus.ENDED;
+        meetings[meetingId].status = MeetingStatus.CANCELLED;
     }
 
     function endMeeting(uint256 meetingId) external override {
