@@ -1,5 +1,8 @@
+#!/bin/sh
+
+solc-select use 0.8.7
+
 certoraRun ReserveListFixed.sol:ReserveList --verify ReserveList:Reserve.spec \
---solc solc8.7 \
 --optimistic_loop \
 --loop_iter 3 \
 
