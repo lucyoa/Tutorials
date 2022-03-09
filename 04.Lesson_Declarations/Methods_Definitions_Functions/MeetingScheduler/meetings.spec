@@ -9,7 +9,7 @@ methods {
     startMeeting(uint256 meetingId)
     cancelMeeting(uint256 meetingId)
     endMeeting(uint256 meetingId)
-    joinMeeting(uint256 meetingId)
+    joinMeeting(uint256 meetingId) envfree
 }
 
 definition meetingUninitialized(uint256 meetingId) returns bool =
@@ -26,9 +26,9 @@ definition meetingPending(uint256 meetingId) returns bool =
     getNumOfParticipents(meetingId) == 0 &&
     getOrganizer(meetingId) != 0;
 
-definition meetingStarted(uint256 meetingId) returns bool =
-    getStartTimeById(meetingId) > 0 &&
-    getEndTimeById(meetingId) > getStartTimeById(meetingId) &&
+definition meetingStarted(env e, uint256 meetingId) returns bool =
+    getStartTimeById(meetingId) <= e.block.timestamp &&
+    e.block.timestamp < getEndTimeById(meetingId) &&
     getStateById(meetingId) == 2 &&
     getOrganizer(meetingId) != 0;
 
@@ -36,13 +36,13 @@ definition meetingEnded(uint256 meetingId) returns bool =
     getStartTimeById(meetingId) > 0 &&
     getEndTimeById(meetingId) > getStartTimeById(meetingId) &&
     getStateById(meetingId) == 3 &&
-    getNumOfParticipents(meetingId) == 0 &&
     getOrganizer(meetingId) != 0;
 
 definition meetingCancelled(uint256 meetingId) returns bool =
     getStartTimeById(meetingId) > 0 &&
     getEndTimeById(meetingId) > getStartTimeById(meetingId) &&
     getStateById(meetingId) == 4 &&
+    getNumOfParticipents(meetingId) == 0 &&
     getOrganizer(meetingId) != 0;
 
 
