@@ -29,6 +29,3 @@ rule uniqueManager(uint256 fundId1, uint256 fundId2, method f) {
 }
 
 
-
-		
-	
